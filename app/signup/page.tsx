@@ -73,6 +73,12 @@ export default function SignUpPage() {
           >
             Sign Up
           </button>
+          <button
+            type="submit"
+            className="w-full rounded-lg bg-blue-600 px-4 py-2 text-white transition-all hover:bg-blue-500"
+          >
+            Signup with Google
+          </button>
         </form>
 
         {/* Divider */}
