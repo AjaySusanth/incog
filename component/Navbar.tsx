@@ -35,7 +35,9 @@ export default function Navbar() {
             </div>
             {/* Main Navigation */}
             <div className="hidden md:flex items-center space-x-6">
-              <Link
+             
+           
+               <Link
                 href="/submit-report"
                 className="text-sm text-zinc-400 hover:text-white transition-colors"
               >

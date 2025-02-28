@@ -122,9 +122,9 @@ export default function Home() {
                 </svg>
               </button>
             </Link>
-            <Link href={"/how-it-works"}>
+            <Link href={"/register"}>
               <button className="flex h-12 items-center justify-center gap-2 rounded-xl bg-white/5 px-8 text-sm font-medium text-white ring-1 ring-inset ring-white/10 transition-all hover:bg-white/10">
-                How it Works
+                Register
               </button>
             </Link>
           </div>
