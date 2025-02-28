@@ -59,6 +59,12 @@ export default function LoginPage() {
           >
             Login
           </button>
+          <button
+            type="submit"
+            className="w-full rounded-lg bg-blue-600 px-4 py-2 text-white transition-all hover:bg-blue-500"
+          >
+            Login with Google
+          </button>
         </form>
 
         <div className="my-6 border-t border-gray-700"></div>
