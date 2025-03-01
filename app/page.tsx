@@ -3,9 +3,9 @@ import Link from "next/link";
 export default function Home() {
   const featuresData = [
     {
-      title: "Military-Grade Encryption",
+      title: "Anonymous Reporting",
       description:
-        "Your identity is protected with state-of-the-art encryption protocols",
+        "Users can report incidents such as ragging, harassment, or drug abuse without revealing their identity. Complaints can include text descriptions, photos, videos, or audio as supporting evidence.",
       icon: (
         <svg
           className="h-6 w-6 text-sky-400"
@@ -23,8 +23,9 @@ export default function Home() {
       ),
     },
     {
-      title: "Real-time Processing",
-      description: "Instant verification and secure routing of all reports",
+      title: "Auto-Alert System",
+      description: "College authorities receive anonymized reports, while law enforcement gets detailed information if the informer consents. Email and SMS notifications ensure that all parties stay informed, with a unique case ID for tracking.",
+      
       icon: (
         <svg
           className="h-6 w-6 text-sky-400"
@@ -43,7 +44,45 @@ export default function Home() {
     },
     {
       title: "Secure Communication",
-      description: "Two-way anonymous channel with law enforcement",
+      description: "Hugging Face models analyze reports to categorize them by type and severity. Urgent cases, such as those mentioning violence or suicide, are flagged for immediate intervention.",
+      icon: (
+        <svg
+          className="h-6 w-6 text-sky-400"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+          />
+        </svg>
+      ),
+    },
+    {
+      title: "Time-Bound Escalation",
+      description: "If no action is taken within 48 hours, cases escalate to higher authorities, such as anti-ragging cells or law enforcement. Escalation ensures accountability and prevents institutions from ignoring serious complaints.",
+      icon: (
+        <svg
+          className="h-6 w-6 text-sky-400"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+          />
+        </svg>
+      ),
+    },
+    {
+      title: "Basic Dashboard",
+      description: "A public dashboard tracks the number of resolved and pending cases for each institution. Users can view safety ratings, filter data by district or institution type, and check student reviews to assess campus safety",
       icon: (
         <svg
           className="h-6 w-6 text-sky-400"
@@ -61,6 +100,7 @@ export default function Home() {
       ),
     },
   ];
+
 
 
   return (
