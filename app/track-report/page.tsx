@@ -1,25 +1,60 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, KeyboardEvent, FormEvent, ChangeEvent } from "react";
+
+// Define types for our data structures
+interface EscalationEntry {
+  to: string;
+  reason: string;
+  date: string;
+  status: string;
+}
+
+interface CaseData {
+  status: string;
+  progress: number;
+  lastUpdated: string;
+  assignedTo: string;
+  priority: string;
+  category: string;
+  estimatedCompletion: string;
+  notes: string;
+  escalationCount: number;
+  escalations: EscalationEntry[];
+  authorizedUsers: string[]; // Added authorized users array
+}
+
+interface MockDataType {
+  [key: string]: CaseData;
+}
+
+interface EscalationDataType {
+  to: string;
+  reason: string;
+}
 
 export default function TrackReport() {
-  const [caseId, setCaseId] = useState("");
-  const [status, setStatus] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [recentCases, setRecentCases] = useState([]);
-  const [error, setError] = useState("");
-  const [showEscalate, setShowEscalate] = useState(false);
-  const [escalationData, setEscalationData] = useState({
+  const [caseId, setCaseId] = useState<string>("");
+  const [status, setStatus] = useState<CaseData | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [recentCases, setRecentCases] = useState<string[]>([]);
+  const [error, setError] = useState<string>("");
+  const [showEscalate, setShowEscalate] = useState<boolean>(false);
+  const [escalationData, setEscalationData] = useState<EscalationDataType>({
     to: "",
     reason: ""
   });
-  const [escalationSubmitted, setEscalationSubmitted] = useState(false);
+  const [escalationSubmitted, setEscalationSubmitted] = useState<boolean>(false);
+  const [isAuthorized, setIsAuthorized] = useState<boolean>(true);
+  
+  // Current user - in a real app, this would come from authentication
+  const currentUser = "user123"; // Simulated current user ID
   
   // Track escalation history for each case
-  const [escalationHistory, setEscalationHistory] = useState({});
+  const [escalationHistory, setEscalationHistory] = useState<Record<string, EscalationEntry[]>>({});
 
   // Simulated case tracking data (Replace with API call)
-  const [mockData, setMockData] = useState({
+  const [mockData, setMockData] = useState<MockDataType>({
     "CMP-12345": { 
       status: "In Progress", 
       progress: 55, 
@@ -30,7 +65,8 @@ export default function TrackReport() {
       estimatedCompletion: "2025-03-10",
       notes: "Evidence collection in progress",
       escalationCount: 0,
-      escalations: []
+      escalations: [],
+      authorizedUsers: ["user123"] // Current user is authorized
     },
     "CMP-67890": { 
       status: "Resolved", 
@@ -42,7 +78,8 @@ export default function TrackReport() {
       estimatedCompletion: "2025-02-28",
       notes: "Suspect apprehended, case closed successfully",
       escalationCount: 0,
-      escalations: []
+      escalations: [],
+      authorizedUsers: ["admin456", "manager789"] // Current user is NOT authorized
     },
     "CMP-54321": { 
       status: "Under Review", 
@@ -54,7 +91,8 @@ export default function TrackReport() {
       estimatedCompletion: "2025-03-05",
       notes: "Witness statements being verified",
       escalationCount: 0,
-      escalations: []
+      escalations: [],
+      authorizedUsers: ["user123", "admin456"] // Current user is authorized
     },
     "CMP-98765": { 
       status: "New", 
@@ -66,7 +104,8 @@ export default function TrackReport() {
       estimatedCompletion: "2025-03-15",
       notes: "Initial assessment completed",
       escalationCount: 0,
-      escalations: []
+      escalations: [],
+      authorizedUsers: ["manager789"] // Current user is NOT authorized
     },
     "CMP-13579": { 
       status: "On Hold", 
@@ -78,12 +117,13 @@ export default function TrackReport() {
       estimatedCompletion: "TBD",
       notes: "Awaiting additional documentation from complainant",
       escalationCount: 0,
-      escalations: []
+      escalations: [],
+      authorizedUsers: ["user123", "supervisor234"] // Current user is authorized
     }
   });
 
   // List of authorities for the escalation dropdown
-  const authorities = [
+  const authorities: string[] = [
     "Station Captain",
     "District Supervisor",
     "Internal Affairs",
@@ -92,19 +132,26 @@ export default function TrackReport() {
     "Department of Justice"
   ];
 
-  const getStatusColor = (status) => {
-    const colors = {
+  const getStatusColor = (status: string): string => {
+    const colors: Record<string, string> = {
       "New": "#6366f1", // Indigo
       "In Progress": "#0ea5e9", // Sky blue
       "Under Review": "#f59e0b", // Amber
       "On Hold": "#9333ea", // Purple
       "Resolved": "#10b981", // Emerald
-      "Not Found": "#ef4444" // Red
+      "Not Found": "#ef4444", // Red
+      "Not Authorized": "#ef4444" // Red
     };
     return colors[status] || "#6b7280"; // Gray default
   };
 
-  const handleTrack = () => {
+  const checkAuthorization = (caseId: string): boolean => {
+    // Check if the case exists and the current user is in the authorized users list
+    if (!mockData[caseId]) return false;
+    return mockData[caseId].authorizedUsers.includes(currentUser);
+  };
+
+  const handleTrack = (): void => {
     if (!caseId.trim()) {
       setError("Please enter a case ID");
       return;
@@ -116,18 +163,58 @@ export default function TrackReport() {
     
     // Simulate API call delay
     setTimeout(() => {
-      const result = mockData[caseId] || { status: "Not Found", progress: 0 };
-      setStatus(result);
-      
-      if (result.status !== "Not Found" && !recentCases.includes(caseId)) {
-        setRecentCases(prev => [caseId, ...prev].slice(0, 3));
+      // Check if case exists in our mock data
+      if (mockData[caseId]) {
+        // Check if user is authorized to view this case
+        const authorized = checkAuthorization(caseId);
+        setIsAuthorized(authorized);
+        
+        if (authorized) {
+          // If authorized, set the status normally
+          setStatus(mockData[caseId]);
+          
+          // Add to recent cases if not already there
+          if (!recentCases.includes(caseId)) {
+            setRecentCases(prev => [caseId, ...prev].slice(0, 3));
+          }
+        } else {
+          // If not authorized, set status with not authorized message
+          setStatus({ 
+            status: "Not Authorized", 
+            progress: 0,
+            lastUpdated: "",
+            assignedTo: "",
+            priority: "",
+            category: "",
+            estimatedCompletion: "",
+            notes: "",
+            escalationCount: 0,
+            escalations: [],
+            authorizedUsers: []
+          });
+        }
+      } else {
+        // Case not found
+        setStatus({ 
+          status: "Not Found", 
+          progress: 0,
+          lastUpdated: "",
+          assignedTo: "",
+          priority: "",
+          category: "",
+          estimatedCompletion: "",
+          notes: "",
+          escalationCount: 0,
+          escalations: [],
+          authorizedUsers: []
+        });
       }
       
       setLoading(false);
     }, 800);
   };
 
-  const handleEscalate = (e) => {
+  const handleEscalate = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     
     if (!escalationData.to) {
@@ -153,7 +240,7 @@ export default function TrackReport() {
         const newCount = currentCount + 1;
         
         // Create escalation entry
-        const escalationEntry = {
+        const escalationEntry: EscalationEntry = {
           to: escalationData.to,
           reason: escalationData.reason,
           date: new Date().toISOString().split('T')[0],
@@ -197,7 +284,7 @@ export default function TrackReport() {
     }, 1000);
   };
 
-  const handleMarkAsSolved = () => {
+  const handleMarkAsSolved = (): void => {
     setLoading(true);
     
     // Simulate API call delay
@@ -222,13 +309,13 @@ export default function TrackReport() {
     }, 800);
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === 'Enter') {
       handleTrack();
     }
   };
 
-  const resetEscalation = () => {
+  const resetEscalation = (): void => {
     setEscalationData({
       to: "",
       reason: ""
@@ -251,7 +338,7 @@ export default function TrackReport() {
               type="text"
               placeholder="Case ID (e.g., CMP-12345)"
               value={caseId}
-              onChange={(e) => setCaseId(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setCaseId(e.target.value)}
               onKeyPress={handleKeyPress}
               className="flex-grow px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -288,7 +375,7 @@ export default function TrackReport() {
             </div>
           )}
           
-          {status && status.status !== "Not Found" && (
+          {status && status.status !== "Not Found" && status.status !== "Not Authorized" && isAuthorized && (
             <div className="mt-6 border border-gray-200 rounded-lg p-4">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold">Case {caseId}</h3>
@@ -302,8 +389,6 @@ export default function TrackReport() {
                   {status.status}
                 </span>
               </div>
-              
-             
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                 <div>
@@ -407,7 +492,7 @@ export default function TrackReport() {
                           <select
                             id="escalate-to"
                             value={escalationData.to}
-                            onChange={(e) => setEscalationData({...escalationData, to: e.target.value})}
+                            onChange={(e: ChangeEvent<HTMLSelectElement>) => setEscalationData({...escalationData, to: e.target.value})}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           >
                             <option value="">Select Authority</option>
@@ -424,7 +509,7 @@ export default function TrackReport() {
                           <textarea
                             id="escalate-reason"
                             value={escalationData.reason}
-                            onChange={(e) => setEscalationData({...escalationData, reason: e.target.value})}
+                            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setEscalationData({...escalationData, reason: e.target.value})}
                             rows={4}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Please provide details about why this case needs escalation..."
@@ -493,6 +578,25 @@ export default function TrackReport() {
               </p>
               <p className="mt-4 text-xs text-gray-400">
                 Try one of these sample IDs: CMP-12345, CMP-67890, CMP-54321, CMP-98765, CMP-13579
+              </p>
+            </div>
+          )}
+          
+          {/* Not Authorized Message */}
+          {status && status.status === "Not Authorized" && (
+            <div className="mt-6 text-center p-6 border border-red-200 rounded-lg bg-red-50">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mb-4">
+                <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m0 0v2m0-2h2m-2 0H9m3-3a3 3 0 100-6 3 3 0 000 6z"></path>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h.01M19 12h.01M12 19h.01M12 5h.01M4.929 4.929l.01-.01M19.071 4.929l-.01-.01M4.929 19.071l.01-.01M19.071 19.071l-.01-.01"></path>
+                </svg>
+              </div>
+              <h3 className="text-lg font-medium text-red-900">Not Authorized</h3>
+              <p className="mt-2 text-sm text-red-600">
+                You are not authorized to view case "{caseId}". This case may belong to another user or department.
+              </p>
+              <p className="mt-4 text-xs text-red-500">
+                If you believe this is an error, please contact your system administrator.
               </p>
             </div>
           )}
