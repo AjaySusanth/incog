@@ -95,10 +95,6 @@ export default function ReportForm({ user }: ReportFormProps) {
           .eq("college_name", formData.collegeName)
           .single();
 
-        if (collegeError) {
-          console.error("Error fetching college ID", collegeError);
-        }
-
         if (collegeData) {
           collegeId = collegeData.id;
         }
