@@ -5,12 +5,10 @@ import { useState } from "react";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Logging in with:", { email, password });
-  };
-
+  }
   return (
     <div className="flex min-h-screen items-center justify-center bg-black/80 px-6">
       <div className="w-full max-w-md rounded-lg border border-white/10 bg-black/60 p-8 shadow-lg backdrop-blur-xl">
