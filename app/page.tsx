@@ -3,9 +3,9 @@ import Link from "next/link";
 export default function Home() {
   const featuresData = [
     {
-      title: "Military-Grade Encryption",
+      title: "Anonymous Reporting",
       description:
-        "Your identity is protected with state-of-the-art encryption protocols",
+        "Users can report incidents such as ragging, harassment, or drug abuse without revealing their identity. Complaints can include text descriptions, photos, videos, or audio as supporting evidence.",
       icon: (
         <svg
           className="h-6 w-6 text-sky-400"
@@ -23,8 +23,9 @@ export default function Home() {
       ),
     },
     {
-      title: "Real-time Processing",
-      description: "Instant verification and secure routing of all reports",
+      title: "Auto-Alert System",
+      description: "College authorities receive anonymized reports, while law enforcement gets detailed information if the informer consents. Email and SMS notifications ensure that all parties stay informed, with a unique case ID for tracking.",
+      
       icon: (
         <svg
           className="h-6 w-6 text-sky-400"
@@ -43,7 +44,45 @@ export default function Home() {
     },
     {
       title: "Secure Communication",
-      description: "Two-way anonymous channel with law enforcement",
+      description: "Hugging Face models analyze reports to categorize them by type and severity. Urgent cases, such as those mentioning violence or suicide, are flagged for immediate intervention.",
+      icon: (
+        <svg
+          className="h-6 w-6 text-sky-400"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+          />
+        </svg>
+      ),
+    },
+    {
+      title: "Time-Bound Escalation",
+      description: "If no action is taken within 48 hours, cases escalate to higher authorities, such as anti-ragging cells or law enforcement. Escalation ensures accountability and prevents institutions from ignoring serious complaints.",
+      icon: (
+        <svg
+          className="h-6 w-6 text-sky-400"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+          />
+        </svg>
+      ),
+    },
+    {
+      title: "Basic Dashboard",
+      description: "A public dashboard tracks the number of resolved and pending cases for each institution. Users can view safety ratings, filter data by district or institution type, and check student reviews to assess campus safety",
       icon: (
         <svg
           className="h-6 w-6 text-sky-400"
@@ -62,34 +101,13 @@ export default function Home() {
     },
   ];
 
-  const statsData = [
-    { value: "100K+", label: "Reports Filed" },
-    { value: "100%", label: "Anonymity Rate" },
-    { value: "24/7", label: "Support Available" },
-  ];
+
 
   return (
     <main className="relative px-6 pt-32">
       <div className="mx-auto max-w-5xl">
         {/* Hero Section */}
         <div className="flex flex-col items-center text-center">
-          <div className="inline-flex h-9 items-center gap-2 rounded-full border border-sky-500/20 bg-sky-500/10 px-4 text-sm text-sky-400">
-            <svg
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-              />
-            </svg>
-            Secure & Anonymous Reporting
-          </div>
-
           <h1 className="mt-8 bg-gradient-to-b from-white to-white/80 bg-clip-text text-6xl font-bold tracking-tight text-transparent sm:text-7xl">
             Report Incident.
             <span className="block bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
@@ -107,19 +125,6 @@ export default function Home() {
             <Link href={"/submit-report"}>
               <button className="group relative flex h-12 items-center justify-center gap-2 rounded-xl bg-sky-500 px-8 text-sm font-medium text-white transition-all hover:bg-sky-400">
                 Make Anonymous Report
-                <svg
-                  className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 12h14M12 5l7 7-7 7"
-                  />
-                </svg>
               </button>
             </Link>
             <Link href={"/register"}>
@@ -154,16 +159,22 @@ export default function Home() {
         </div>
 
         {/* Stats Section */}
-        <div className="mt-28 rounded-2xl bg-zinc-900 p-8">
-          <div className="grid gap-y-8 sm:grid-cols-3">
-            {statsData.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-3xl font-bold text-white">
-                  {stat.value}
-                </div>
-                <div className="mt-1 text-sm text-zinc-400">{stat.label}</div>
-              </div>
-            ))}
+     
+
+        {/* College Complaint Statistics Section */}
+        <div className="mt-28 rounded-2xl bg-zinc-900 p-8 text-center">
+          <h2 className="text-3xl font-bold text-white">
+            College Complaint Statistics
+          </h2>
+          <p className="mt-3 text-lg text-zinc-400">
+            View reports and complaint rates from registered colleges.
+          </p>
+          <div className="mt-6 flex justify-center">
+            <Link href={"/college-rating"}>
+              <button className="group relative flex h-12 items-center justify-center gap-2 rounded-xl bg-sky-500 px-8 text-sm font-medium text-white transition-all hover:bg-sky-400">
+                View Complaint Rates
+              </button>
+            </Link>
           </div>
         </div>
 
