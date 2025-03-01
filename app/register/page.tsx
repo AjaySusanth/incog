@@ -78,16 +78,11 @@ const SimpleCollegeForm: React.FC = () => {
   };
 
   if (submitSuccess) {
-    return (
+    return ( 
       <div className="max-w-md mx-auto p-6 bg-zinc-900/50 rounded-2xl border border-zinc-800">
         <h2 className="text-xl font-bold text-white mb-4">Registration Successful!</h2>
         <p className="text-zinc-400 mb-4">Thank you for registering your college with our platform.</p>
-        <button 
-          className="px-4 py-2 bg-gradient-to-br from-sky-500 to-blue-600 text-white rounded-xl hover:from-sky-400 hover:to-blue-500"
-          onClick={() => setSubmitSuccess(false)}
-        >
-          Register Another College
-        </button>
+       
       </div>
     );
   }

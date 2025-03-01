@@ -62,34 +62,12 @@ export default function Home() {
     },
   ];
 
-  const statsData = [
-    { value: "100K+", label: "Reports Filed" },
-    { value: "100%", label: "Anonymity Rate" },
-    { value: "24/7", label: "Support Available" },
-  ];
 
   return (
     <main className="relative px-6 pt-32">
       <div className="mx-auto max-w-5xl">
         {/* Hero Section */}
         <div className="flex flex-col items-center text-center">
-          <div className="inline-flex h-9 items-center gap-2 rounded-full border border-sky-500/20 bg-sky-500/10 px-4 text-sm text-sky-400">
-            <svg
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-              />
-            </svg>
-            Secure & Anonymous Reporting
-          </div>
-
           <h1 className="mt-8 bg-gradient-to-b from-white to-white/80 bg-clip-text text-6xl font-bold tracking-tight text-transparent sm:text-7xl">
             Report Incident.
             <span className="block bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
@@ -107,19 +85,6 @@ export default function Home() {
             <Link href={"/submit-report"}>
               <button className="group relative flex h-12 items-center justify-center gap-2 rounded-xl bg-sky-500 px-8 text-sm font-medium text-white transition-all hover:bg-sky-400">
                 Make Anonymous Report
-                <svg
-                  className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 12h14M12 5l7 7-7 7"
-                  />
-                </svg>
               </button>
             </Link>
             <Link href={"/register"}>
@@ -154,16 +119,22 @@ export default function Home() {
         </div>
 
         {/* Stats Section */}
-        <div className="mt-28 rounded-2xl bg-zinc-900 p-8">
-          <div className="grid gap-y-8 sm:grid-cols-3">
-            {statsData.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-3xl font-bold text-white">
-                  {stat.value}
-                </div>
-                <div className="mt-1 text-sm text-zinc-400">{stat.label}</div>
-              </div>
-            ))}
+     
+
+        {/* College Complaint Statistics Section */}
+        <div className="mt-28 rounded-2xl bg-zinc-900 p-8 text-center">
+          <h2 className="text-3xl font-bold text-white">
+            College Complaint Statistics
+          </h2>
+          <p className="mt-3 text-lg text-zinc-400">
+            View reports and complaint rates from registered colleges.
+          </p>
+          <div className="mt-6 flex justify-center">
+            <Link href={"/college-rating"}>
+              <button className="group relative flex h-12 items-center justify-center gap-2 rounded-xl bg-sky-500 px-8 text-sm font-medium text-white transition-all hover:bg-sky-400">
+                View Complaint Rates
+              </button>
+            </Link>
           </div>
         </div>
 
