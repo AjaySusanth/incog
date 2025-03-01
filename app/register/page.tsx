@@ -88,7 +88,7 @@ const SimpleCollegeForm: React.FC = () => {
       if (authError) {console.log(authError)};
   
       // Step 2: Insert college details into the `colleges` table
-      const { data: collegeData, error: collegeError } = await supabase
+      const {error: collegeError } = await supabase
         .from('colleges')
         .insert([
           {

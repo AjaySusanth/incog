@@ -27,7 +27,7 @@ export default function SignUpPage() {
       }
 
       // Step 2: Insert user details into the `users` table
-      const { data: userData, error: userError } = await supabase
+      const {error: userError } = await supabase
         .from('users')
         .insert([
           {
@@ -43,9 +43,13 @@ export default function SignUpPage() {
       }
 
       setSuccess(true);
-    } catch (error : any) {
+    } catch (error : unknown) {
       console.error('Error:', error);
-      setError(error.message || 'Sign up failed. Please try again.');
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('Sign up failed. Please try again.');
+      }
     }
   };
 

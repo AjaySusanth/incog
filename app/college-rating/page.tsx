@@ -17,7 +17,6 @@ export default function CollegeRatingsPage() {
     { id: 10, name: "Amrita School of Engineering", location: "Amritapuri", complaintsRegistered: 58, complaintsSolved: 42, safetyScore: 79 }
 ];
 
-  const [colleges, setColleges] = useState(initialColleges);
   const [searchTerm, setSearchTerm] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
 
@@ -32,7 +31,7 @@ export default function CollegeRatingsPage() {
   });
 
   // Function to determine safety score color
-  const getSafetyScoreColor = (score) => {
+  const getSafetyScoreColor = (score : number) => {
     if (score >= 90) return 'text-green-400';
     if (score >= 80) return 'text-blue-400';
     if (score >= 70) return 'text-yellow-400';
@@ -116,7 +115,7 @@ export default function CollegeRatingsPage() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5" className="px-6 py-4 text-center text-sm text-gray-400">
+                  <td colSpan={5} className="px-6 py-4 text-center text-sm text-gray-400">
                     No colleges found matching your search criteria.
                   </td>
                 </tr>
