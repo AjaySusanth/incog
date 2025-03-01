@@ -1,22 +1,27 @@
-'use client';
+"use client";
 
-import Link from "next/link";
 import { useState } from "react";
-import supabase from '@/utils/supabaseClient';
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthProvider"; // Ensure you have an AuthProvider
+import Link from "next/link";
 
 export default function LoginPage() {
+  const { supabase } = useAuth();
+  const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setLoading(true);
 
     try {
-      // Step 1: Log in with Supabase Auth
-      const { data, error: authError } = await supabase.auth.signInWithPassword({
+      const { error: authError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
@@ -25,19 +30,17 @@ export default function LoginPage() {
         throw authError;
       }
 
-      // Step 2: Handle successful login
       setSuccess(true);
-      console.log('Logged in:', data);
-      // Redirect or perform other actions after login
-    } catch (error :unknown) {
-      console.error('Login Error:', error);
-      if (error instanceof Error) {
-        setError(error.message)
-      }
-      else {
-        setError('Login failed. Please try again.') 
-      }
-      
+
+      // 🔥 Ensure session is properly stored
+      await supabase.auth.getSession();
+
+      // Redirect to protected page after login
+      router.push("/submit-report");
+    } catch (error: unknown) {
+      setError(error instanceof Error ? error.message : "Login failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -54,12 +57,12 @@ export default function LoginPage() {
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Email Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-300">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-300">
                 Email Address
               </label>
               <input
+                id="email"
                 type="email"
                 className="mt-1 w-full rounded-lg border border-gray-600 bg-black/30 px-4 py-2 text-white outline-none focus:border-blue-500"
                 placeholder="you@example.com"
@@ -69,12 +72,12 @@ export default function LoginPage() {
               />
             </div>
 
-            {/* Password Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-300">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-300">
                 Password
               </label>
               <input
+                id="password"
                 type="password"
                 className="mt-1 w-full rounded-lg border border-gray-600 bg-black/30 px-4 py-2 text-white outline-none focus:border-blue-500"
                 placeholder="••••••••"
@@ -84,40 +87,28 @@ export default function LoginPage() {
               />
             </div>
 
-            {/* Error Message */}
             {error && (
               <div className="text-center text-red-500">
                 <p>{error}</p>
               </div>
             )}
 
-            {/* Forgot Password Link */}
-            <div className="flex items-center justify-between text-sm text-gray-400">
-              <Link href="/forgot-password" className="hover:text-white">
-                Forgot password?
-              </Link>
-            </div>
-
-            {/* Login Button */}
             <button
               type="submit"
-              className="w-full rounded-lg bg-blue-600 px-4 py-2 text-white transition-all hover:bg-blue-500"
+              disabled={loading}
+              className="w-full rounded-lg bg-blue-600 px-4 py-2 text-white transition-all hover:bg-blue-500 disabled:opacity-50"
             >
-              Login
+              {loading ? "Logging in..." : "Login"}
             </button>
+
+            <div className="text-center text-sm text-gray-400 mt-4">
+            Don&apos;t have an account?{" "}
+              <Link href="/signup" className="text-blue-400 hover:underline">
+                Sign up
+              </Link>
+            </div>
           </form>
         )}
-
-        {/* Divider */}
-        <div className="my-6 border-t border-gray-700"></div>
-
-        {/* Sign Up Link */}
-        <p className="text-center text-sm text-gray-400">
-          Don&apos;t have an account?{" "}
-          <Link href="/signup" className="text-blue-500 hover:underline">
-            Sign up
-          </Link>
-        </p>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, FormEvent, useEffect } from 'react';
+import React, { useState, FormEvent} from 'react';
 import supabase from '@/utils/supabaseClient';
 
 
@@ -21,23 +21,6 @@ const SimpleCollegeForm: React.FC = () => {
   const [errors, setErrors] = useState<Partial<Record<keyof SimpleCollegeFormData, string>>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-
-  useEffect(() => {
-    const testSupabaseConnection = async () => {
-      const { data, error } = await supabase
-        .from('colleges')
-        .select('*')
-        .limit(1);
-
-      if (error) {
-        console.error('Supabase Connection Error:', error);
-      } else {
-        console.log('Supabase Connection Successful:', data);
-      }
-    };
-
-    testSupabaseConnection();
-  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

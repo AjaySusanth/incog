@@ -1,10 +1,32 @@
 "use client";
+
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthProvider"; // Use AuthProvider instead of calling supabase directly
 import MobileMenu from "./MobileMenu";
 
 export default function Navbar() {
+  const { supabase, session } = useAuth(); // Get session from AuthProvider
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState(session?.user || null); // Initialize with session
+
+  // Listen for auth state changes
+  useEffect(() => {
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user || null);
+    });
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, [supabase]);
+
+  // Logout function
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+  };
+
   return (
     <>
       <nav className="fixed top-0 left-0 w-full border-b border-white/5 bg-black/60 backdrop-blur-xl z-50">
@@ -33,11 +55,10 @@ export default function Navbar() {
                 </span>
               </Link>
             </div>
+
             {/* Main Navigation */}
             <div className="hidden md:flex items-center space-x-6">
-             
-           
-               <Link
+              <Link
                 href="/submit-report"
                 className="text-sm text-zinc-400 hover:text-white transition-colors"
               >
@@ -50,11 +71,11 @@ export default function Navbar() {
                 Track Report
               </Link>
               <Link
-  href="/how-it-works"
-  className="text-sm text-zinc-400 hover:text-white transition-colors"
->
-  How It Works
-</Link>
+                href="/how-it-works"
+                className="text-sm text-zinc-400 hover:text-white transition-colors"
+              >
+                How It Works
+              </Link>
               <Link
                 href="/resources"
                 className="text-sm text-zinc-400 hover:text-white transition-colors"
@@ -62,20 +83,32 @@ export default function Navbar() {
                 Resources
               </Link>
             </div>
-            {/* Emergency Button */}
+
+            {/* Authentication Buttons */}
             <div className="flex items-center space-x-4">
-              <Link
-                href="/login"
-                className="hidden md:block text-sm text-zinc-400 hover:text-white transition-colors"
-              >
-                Login
-              </Link>
-              <Link
-                href="/signup"
-                className="hidden md:block text-sm text-zinc-400 hover:text-white transition-colors"
-              >
-                Signup
-              </Link>
+              {user ? (
+                <button
+                  onClick={handleLogout}
+                  className="text-sm text-red-400 hover:text-white transition-colors"
+                >
+                  Logout
+                </button>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    className="hidden md:block text-sm text-zinc-400 hover:text-white transition-colors"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    href="/signup"
+                    className="hidden md:block text-sm text-zinc-400 hover:text-white transition-colors"
+                  >
+                    Signup
+                  </Link>
+                </>
+              )}
 
               {/* Mobile Menu Button */}
               <button
@@ -100,7 +133,11 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
-      <MobileMenu isOpen={isMobileMenuOpen} onClose={()=>setIsMobileMenuOpen(false)}/>
+
+      <MobileMenu
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+      />
     </>
   );
 }

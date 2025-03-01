@@ -1,6 +1,25 @@
-import ReportWizard from "@/component/ReportWizard";
+// app/submit-report/page.tsx
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthProvider"; // Ensure correct import path
+import ReportForm from "@/component/ReportForm";// Ensure correct import path
 
 export default function SubmitReport() {
+  const { session } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!session) {
+      router.push("/login"); // Redirect to login if not authenticated
+    }
+  }, [session, router]);
+
+  if (!session) {
+    return <div className="h-screen flex items-center justify-center text-white">Loading...</div>;
+  }
+
   return (
     <div className="relative min-h-screen bg-black selection:bg-sky-500/20 overflow-hidden">
       {/* Gradient Background */}
@@ -40,7 +59,8 @@ export default function SubmitReport() {
           </div>
 
           <div className="mt-16 bg-zinc-900/50 rounded-2xl border border-white/5 p-6">
-            <ReportWizard/>
+            {/* Pass the user object to ReportForm */}
+            <ReportForm user={session.user} />
           </div>
         </div>
       </main>
