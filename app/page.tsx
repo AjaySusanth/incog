@@ -65,19 +65,21 @@ export default function Home() {
       title: "Time-Bound Escalation",
       description: "If no action is taken within 48 hours, cases escalate to higher authorities, such as anti-ragging cells or law enforcement. Escalation ensures accountability and prevents institutions from ignoring serious complaints.",
       icon: (
-        <svg
-          className="h-6 w-6 text-sky-400"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-          />
-        </svg>
+<svg
+  className="h-6 w-6 text-blue-500"
+  fill="none"
+  viewBox="0 0 24 24"
+  stroke="currentColor"
+>
+  <path
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={2}
+    d="M12 8v4l3 3m6-3a9 9 0 11-9-9"
+  />
+  <circle cx="12" cy="12" r="9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+</svg>
+
       ),
     },
     {
@@ -85,18 +87,17 @@ export default function Home() {
       description: "A public dashboard tracks the number of resolved and pending cases for each institution. Users can view safety ratings, filter data by district or institution type, and check student reviews to assess campus safety",
       icon: (
         <svg
-          className="h-6 w-6 text-sky-400"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-          />
-        </svg>
+  className="h-6 w-6 text-blue-500"
+  fill="none"
+  viewBox="0 0 24 24"
+  stroke="currentColor"
+>
+  <rect x="3" y="3" width="7" height="7" rx="1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  <rect x="14" y="3" width="7" height="7" rx="1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  <rect x="3" y="14" width="7" height="7" rx="1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  <rect x="14" y="14" width="7" height="7" rx="1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+</svg>
+
       ),
     },
   ];
