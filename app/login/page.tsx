@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthProvider"; // Ensure you have an AuthProvider
 import Link from "next/link";
@@ -14,6 +14,21 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+    // Check if user is already logged in
+    useEffect(() => {
+      const checkUser = async () => {
+        const { data } = await supabase.auth.getUser();
+        if (data.user) {
+          router.replace("/"); // Redirect if logged in
+        } else {
+          setCheckingAuth(false); // Allow rendering if not logged in
+        }
+      };
+  
+      checkUser();
+    }, [router, supabase]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +51,7 @@ export default function LoginPage() {
       await supabase.auth.getSession();
 
       // Redirect to protected page after login
-      router.push("/submit-report");
+      router.push("/");
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "Login failed. Please try again.");
     } finally {

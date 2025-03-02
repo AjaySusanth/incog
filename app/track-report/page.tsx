@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useEffect, KeyboardEvent, FormEvent, ChangeEvent } from "react";
+import { useAuth } from "@/context/AuthProvider";
+import { useRouter } from "next/navigation";
+import { useState, KeyboardEvent, FormEvent, ChangeEvent, useEffect } from "react";
 
 // Define types for our data structures
 interface EscalationEntry {
@@ -34,6 +36,7 @@ interface EscalationDataType {
 }
 
 export default function TrackReport() {
+
   const [caseId, setCaseId] = useState<string>("");
   const [status, setStatus] = useState<CaseData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -323,6 +326,19 @@ export default function TrackReport() {
     setShowEscalate(true);
     setEscalationSubmitted(false);
   };
+
+  const { session } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!session) {
+      router.push("/login"); // Redirect to login if not authenticated
+    }
+  }, [session, router]);
+
+  if (!session) {
+    return <div className="h-screen flex items-center justify-center text-white">Loading...</div>;
+  }
 
   return (
     <div className="bg-black-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8">

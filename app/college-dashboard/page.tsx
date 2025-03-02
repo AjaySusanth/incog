@@ -24,7 +24,7 @@ export default function CollegeRatingsPage() {
 
   const calculateSafetyScore = (total: number, solved: number) => {
     if (total === 0) return 100;
-    return Math.round((((total-solved)/total) * 100));
+    return Math.round((((solved)/total) * 100));
   };
 
   useEffect(() => {

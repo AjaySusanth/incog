@@ -25,7 +25,7 @@ export default function ReportForm({ user }: ReportFormProps) {
     complaintDetails: "",
     complaintTitle: "",
   });
-
+  
   const [media, setMedia] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -65,7 +65,7 @@ export default function ReportForm({ user }: ReportFormProps) {
       if (!user) {
         throw new Error("You must be logged in to submit a complaint.");
       }
-
+      
       // Media upload
       let url = null;
       if (media) {
@@ -89,7 +89,7 @@ export default function ReportForm({ user }: ReportFormProps) {
       // Fetch college_id from the colleges table
       let collegeId = null;
       if (formData.collegeName) {
-        const { data: collegeData, error: collegeError } = await supabase
+        const { data: collegeData, error } = await supabase
           .from("colleges")
           .select("id")
           .eq("college_name", formData.collegeName)
@@ -106,6 +106,7 @@ export default function ReportForm({ user }: ReportFormProps) {
           user_id: user.id,
           college_id: collegeId ?? null,
           college_name: formData.collegeName,
+          complaint_title:formData.complaintTitle,
           complaint_desc: formData.complaintDetails,
           authority: "Pending Analysis",
           status: "Pending",
